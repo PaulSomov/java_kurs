@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+    <title>Изменение отгрузки</title>
+</head>
+<body>
+<div th:include="header :: body"></div>
+
+
+<div class="container mt-4">
+
+    <h2>Параметры отгрузки</h2>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <p class="card-text">Адрес: <span th:text="${shipment.address}"></span></p>
+            <p class="card-text">Статус: <span th:text="${shipment.status}"></span></p>
+            <p class="card-text">Дата: <span th:text="${shipment.shipmentTime}"></span></p>
+            <th:block th:if="${#strings.toString(shipment.status) != 'DONE'}">
+
+                <div class="card mt-3">
+                    <form th:action="@{/shipments/changeStatus/{id}(id=${shipment.id})}" method="post">
+                        <div class="form-group">
+                            <label for="newStatus">Новый статус:</label>
+                            <select class="form-control"  name="newStatus" required>
+                                <option th:each="status : ${shipmentStatusValues}"
+                                        th:value="${status}" th:text="${#strings.capitalize(status.toString().toLowerCase())}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Обновить статус</button>
+                    </form>
+                </div>
+            </th:block>
+            <th:block th:if="${#strings.toString(shipment.status) == 'DONE'}">
+                <p class="text-muted">Изменение выполнено!</p>
+            </th:block>
+        </div>
+
+    </div>
+
+
+    <!-- Add  Item Form -->
+    <th:block th:if="${#strings.toString(shipment.status) != 'DONE'}">
+
+        <h4>Добавить приборы учета отгрузки</h4>
+        <form th:action="@{/shipments/addItem/{id}(id=${shipment.id})}" method="post" class="mb-3">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="productId">Прибор учета:</label>
+                    <select class="form-control" id="productId" name="newItemId" required>
+                        <option th:each="inventoryItem : ${inventoryItems}" th:value="${inventoryItem.id}"  th:text="${ inventoryItem.product.name + ' ' + inventoryItem.serialNumber }"></option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить</button>
+        </form>
+    </th:block>
+
+
+
+    <!-- Display  Items -->
+    <h4>Приборы учета поставки</h4>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Серийный номер</th>
+            <th>Прибор учета</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="inventoryItem : ${shipmentInventoryItems}">
+            <td th:text="${inventoryItem.serialNumber}"></td>
+            <td th:text="${inventoryItem.product.name}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+</div>
+
+    <!-- Shipment Status Change Modal -->
+    <div class="modal" id="changeStatusModal" tabindex="-1" role="dialog" aria-labelledby="changeStatusModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changeStatusModalLabel">Изменить статус поставки</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form to Change Batch Status -->
+                    <form th:action="@{/shipments/changeStatus/{id}(id=${shipment.id})}" method="post">
+                        <div class="form-group">
+                            <label for="newStatus">Новый статус:</label>
+                            <select class="form-control" id="newStatus" name="newStatus" required>
+                                <option th:each="status : ${shipmentStatusValues}"
+                                        th:value="${status}" th:text="${#strings.capitalize(status.toString().toLowerCase())}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Обновить статус</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Приборы учета на складе</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+</head>
+
+<body>
+<div th:include="header :: body"></div>
+
+<div class="container mt-4">
+    <h2>Приборы учета на складе</h2>
+
+    <!-- Table for Inventory Items -->
+    <table class="table mt-3">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Серийный номер</th>
+            <th>Номенклатура</th>
+            <th>Поставка</th>
+            <th></th>
+            <th></th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate over InventoryItems and display information -->
+        <tr th:each="item : ${inventoryItems}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.serialNumber}"></td>
+            <td th:text="${item.product.name}"></td>
+            <td th:text="${item.batch.id}"></td>
+            <td>
+                <a th:href="@{/batches/view/{id}(id=${item.batch.id})}" class="btn btn-primary btn-sm">Посмотреть поставки</a>
+            </td>
+            <td>
+                <a th:if="${item.shipment != null}" th:href="@{/shipments/edit/{id}(id=${item.shipment.id})}" class="btn btn-primary btn-sm">Посмотреть отгрузки</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+</body>
+
+</html>

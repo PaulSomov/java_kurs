@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Список поставок</title>
+    <!-- Add your existing head content here -->
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+    <!-- Link to Bootstrap Datepicker CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+          integrity="sha384-v0yr8O4YQk3NR6EdQ7PpL1bhPYl8ggngpqgLUe6Ib5bdK7jjfsj1QbZ4SHh8k4z6"
+          crossorigin="anonymous">
+
+    <!-- Link to jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+
+    <!-- Link to Bootstrap JS and Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+    <!-- Link to Bootstrap Datepicker JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
+            integrity="sha384-oiwCUeHhd5L/Aw2nXiOTzVZBPDIJ4JK2JL6ZU7VJEqIvoU2LFtXGxhvp5QYSx1c2"
+            crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+<div th:include="header :: body"></div>
+
+<div class="container mt-4">
+    <h2>Список поставок</h2>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createBatchModal">
+        Создать поставку
+    </button>
+    <div th:if="${param.error}">
+        <div class="alert alert-danger" role="alert">
+            Некорректный формат даты
+        </div>
+    </div>
+
+    <table class="table mt-3">
+        <thead>
+        <tr>
+            <th scope="col">Информация</th>
+            <th scope="col">Дата</th>
+            <th scope="col">Статус</th>
+            <th scope="col"></th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="batch : ${batches}">
+            <td th:text="${batch.info}"></td>
+            <td th:text="${batch.arrivalDate}"></td>
+            <td th:text="${batch.batchStatus}"></td>
+            <td>
+                <a th:href="@{/batches/view/{id}(id=${batch.id})}" class="btn btn-info btn-sm">Посмотреть детали</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Create Batch Modal -->
+    <div class="modal" id="createBatchModal" tabindex="-1" role="dialog" aria-labelledby="createBatchModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createBatchModalLabel">Создать поставку</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Create Batch Form -->
+                    <form th:action="@{/batches/create}" method="post">
+                        <div class="form-group">
+                            <label for="info">Информация:</label>
+                            <input type="text" class="form-control" id="info" name="info" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="arrivalDate">Дата:</label>
+                            <input type="datetime-local" class="form-control" id="arrivalDate" name="arrivalDate"
+                                   required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Создать поставку</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add your existing footer content here -->
+
+<!-- Link to Bootstrap JS and Popper.js -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+</body>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('#arrivalDate').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true
+        });
+    });
+</script>
+
+</html>
